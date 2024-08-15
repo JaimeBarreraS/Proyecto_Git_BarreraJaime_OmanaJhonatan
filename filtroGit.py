@@ -51,7 +51,7 @@ def enteros(prompt): # Función para solicitar un número entero al usuario
             value = int(input(prompt)) # Solicita un número entero al usuario
             return value # Devuelve el valor ingresado si es válido
         except ValueError:
-            print(Fore.RED + "Entrada inválida. Ingrese un número entero." + Style.RESET_ALL) # Muestra un mensaje de error si la entrada no es válida
+            print(Fore.RED + "Entrada inválida. Ingrese un número entero." + Style.RESET_ALL) # Muestra un mensaje de error si la entrada no es válida.
 
 def instrucciones(): # Función para imprimir las instrucciones de uso del programa
     print(Fore.YELLOW + "Instrucciones de uso:" + Style.RESET_ALL)
