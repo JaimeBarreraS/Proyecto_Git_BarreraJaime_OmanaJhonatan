@@ -98,3 +98,103 @@ while True:
         }
         data = cargar() # Carga los datos existentes
         data["campers"].append(camper) # Agrega el nuevo camper a la lista de campers
+         guardar(data) # Guarda los datos actualizados
+        print(Fore.GREEN + "Camper creado exitosamente." + Style.RESET_ALL)
+        input("Presiona Enter para continuar...")
+
+    elif opcion == 2: # Si la opción es 2, registrar un nuevo trainer
+        print(Fore.YELLOW + "=== Registrar Trainer ===" + Style.RESET_ALL)
+        trainer={
+            "# de Identificacion" : enteros("Ingrese el numero de CC del Trainer: "),
+            "nombres" : input("Ingrese el nombre del Trainer: "),
+            "apellidos" : input("Ingrese el apellido del Trainer: "),
+            "rutas_asignadas":[]
+        }
+        data = cargar() # Carga los datos existentes
+        data["trainers"].append(trainer) # Agrega el nuevo trainer a la lista de trainers
+        guardar(data) # Guarda los datos actualizados
+        print(Fore.GREEN + "Trainer creado exitosamente." + Style.RESET_ALL)
+        input("Presiona Enter para continuar...")
+    
+    elif opcion == 3: # Si la opción es 3, registrar un nuevo coordinador
+        print(Fore.YELLOW + "=== Registrar Coordinador ===" + Style.RESET_ALL)
+        coordinador={
+            "# de Identificacion" : enteros("Ingrese el numero de CC del Coordinador: "),
+            "nombres" : input("Ingrese el nombre del Coordinador: "),
+            "apellidos" : input("Ingrese el apellido del Coordinador: "),
+        }
+        data = cargar() # Carga los datos existentes
+        data["coordinador"] = coordinador  # Asigna el diccionario del coordinador a la clave "coordinador"
+        guardar(data) # Guarda los datos actualizados
+        print(Fore.GREEN + "Coordinador creado exitosamente." + Style.RESET_ALL)
+        input("Presiona Enter para continuar...")
+    
+    elif opcion == 4: # Si la opción es 4, crear una nueva ruta de entrenamiento
+        print(Fore.YELLOW + "=== Crear Ruta de Entrenamiento ===" + Style.RESET_ALL)
+        ruta_nombre=input("Ingrese el nombre de la ruta (NodeJS, Java, NetCore): ").lower()
+        if ruta_nombre in ["nodejs","java","netcore"]: # Verifica si el nombre de la ruta es válido
+            ruta={
+                "nombre": ruta_nombre,
+                "modulos":[]
+            }
+            modulos = [
+                {"nombre": "Fundamentos de Programacion", "contenido": "Introducción a la algoritmia, PSeInt y Python"},
+                {"nombre": "Programacion Web", "contenido": "HTML, CSS y Bootstrap"},
+                "Programacion formal",
+                "Base de datos",
+                "Backend",
+            ]
+            print("""
+- Programación formal (Java, JavaScript, C#).
+- Bases de datos (Mysql, MongoDb y Postgresql).
+- Backend (NetCore, Spring Boot, NodeJS y Express).
+""")
+            for modulo in modulos: # Itera sobre los módulos
+                if isinstance(modulo, dict): # Si el módulo es un diccionario, lo agrega directamente a la ruta
+                    ruta["modulos"].append(modulo)
+                else: # Si el módulo es un string, solicita el contenido y lo agrega como un diccionario
+                    print("---------------------------------------------------------")
+                    print(Fore.YELLOW + f"Configurando módulo: {modulo}" + Style.RESET_ALL)
+                    detalle_modulo={
+                        "nombre": modulo,
+                        "contenido":input(f"Ingrese el contenido del módulo '{modulo}': ")
+                    }
+
+                    ruta["modulos"].append(detalle_modulo)
+
+            data=cargar() # Carga los datos existentes
+            data["rutas"].append(ruta) # Agrega la nueva ruta a la lista de rutas
+            guardar(data) # Guarda los datos actualizados
+            print(Fore.GREEN + "Ruta de entrenamiento creada exitosamente." + Style.RESET_ALL)
+            input("Presiona Enter para continuar...")
+        else:
+            print(Fore.RED + "Ruta de entrenamiento no valida. Las opciones validas son: NodeJS, Java, NetCore." + Style.RESET_ALL)
+            input("Presiona Enter para continuar...")
+
+    elif opcion == 5: # Si la opción es 5, registrar las notas de los campers
+        data = cargar() # Carga los datos existentes
+        campers=data["campers"]
+        coordinador=data["coordinador"]
+
+        if not coordinador: # Verifica si hay un coordinador registrado
+            print(Fore.RED + "No hay coordinador registrado." + Style.RESET_ALL)
+        else:
+            print(Fore.GREEN + f"Binvenido, coordinador {coordinador['nombres']} {coordinador['apellidos']}" + Style.RESET_ALL)
+            print("==============================================================================")
+            
+            for camper in campers: # Itera sobre los campers
+                if camper['estado'] == "ingreso": # Verifica si el camper está en estado "ingreso"
+                    nota_teorica=decimal(f"Ingrese la nota teorica del camper {camper['nombres']} {camper['apellidos']}: ")
+                    print("-------------------------------------------------------------------------------")
+                    nota_practica=decimal(f"Ingrese la nota practica del camper {camper['nombres']} {camper['apellidos']}: ")
+                    promedio = (nota_teorica * 0.3) + (nota_practica* 0.6)  # Calcula el promedio de las notas
+                    if promedio >= 0.6: # Verifica si el promedio es mayor o igual a 0.6
+                        camper["estado"] = "aprobado"
+                    else: 
+                        camper["estado"] = "inscrito"
+                    camper["nota_final"] = promedio # Asigna el promedio como la nota final del camper
+            guardar(data) # Guarda los datos actualizados
+            print(Fore.GREEN + "Notas registradas exitosamente." + Style.RESET_ALL)
+            input("Presiona Enter para continuar...")
+
+    elif opcion == 6: # Si la opción es 6, asignar campers y trainers a rutas de entrenamiento
