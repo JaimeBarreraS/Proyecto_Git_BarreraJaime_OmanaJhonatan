@@ -399,7 +399,7 @@ while True:
             print(Fore.RED + "Opcion invalida" + Style.RESET_ALL)
             input("Presiona Enter para continuar...")   
 
-             elif opcion == 8: # Si la opción es 8, gestionar matrículas 
+    elif opcion == 8: # Si la opción es 8, gestionar matrículas 
         data = cargar() # Carga los datos existentes
         campers = [c for c in data["campers"] if c["estado"] == "aprobado"] # Filtra los campers aprobados
         rutas = data["rutas"]
@@ -488,3 +488,41 @@ while True:
                 horario_seleccionado = horarios_disponibles[opcion_horario - 1] # Obtiene el horario seleccionado desde la lista de horarios disponibles
                 trainer_seleccionado["horarios"] = [horario_seleccionado] # Asigna el horario seleccionado al trainer seleccionado en la clave "horarios"
                 guardar(data) # Guarda los datos actualizados
+                print(Fore.GREEN + f"Horario '{horario_seleccionado}' asignado exitosamente al trainer '{trainer_seleccionado['nombres']} {trainer_seleccionado['apellidos']}'." + Style.RESET_ALL)
+            else: # Si la opción del horario es inválida
+                print(Fore.RED + "Opción de horario inválida." + Style.RESET_ALL)
+        else:  # Si la opción del trainer es inválida
+            print(Fore.RED + "Opción de trainer inválida." + Style.RESET_ALL)
+
+        input("Presiona Enter para continuar...")
+
+print(Fore.GREEN + "¡Gracias por utilizar la Gestion Academica de CampusLands!" + Style.RESET_ALL) # Mensaje de despedida
+
+
+#   Este código es un programa en Python que permite gestionar una academia llamada "CampusLands". 
+#   A continuación, se describen las principales funciones del código línea por línea:
+
+#  1. Las líneas 1-3 importan los módulos necesarios: os para interactuar con el sistema operativo, json para trabajar con archivos JSON, y Fore y Style del módulo colorama para imprimir texto en colores.
+#  2. La línea 5 define la ruta del archivo JSON donde se almacenarán los datos.
+#  3. Las líneas 7-12 definen la función limpiar() para limpiar la consola dependiendo del sistema operativo.
+#  4. Las líneas 14-31 definen la función cargar() para cargar los datos desde el archivo JSON. Si el archivo no existe, se crean los datos iniciales.
+#  5. Las líneas 23-36 definen la función guardar(data) para guardar los datos en el archivo JSON.
+#  6. Las líneas 38-44 definen la función decimal(prompt) para solicitar un número decimal al usuario.
+#  7. Las líneas 46-52 definen la función enteros(prompt) para solicitar un número entero al usuario.
+#  8. Las líneas 54-59 definen la función instrucciones() para imprimir las instrucciones de uso del programa.
+#  9. Las líneas 62-80 contienen el bucle principal del programa y el menú principal.
+#  10. Las líneas 82-84 implementan la opción 0 del menú para salir del programa.
+#  11. Las líneas 86-103 implementan la opción 1 del menú para registrar un nuevo camper.
+#  12. Las líneas 105-117 implementan la opción 2 del menú para registrar un nuevo trainer.
+#  13. Las líneas 119-130 implementan la opción 3 del menú para registrar un nuevo coordinador.
+#  14. Las líneas 132-172 implementan la opción 4 del menú para crear una nueva ruta de entrenamiento.
+#  15. Las líneas 174-198 implementan la opción 5 del menú para que el coordinador registre las notas de los campers.
+#  16. Las líneas 200-246 implementan la opción 6 del menú para asignar campers y trainers a las rutas de entrenamiento.
+#  17. Las líneas 248-400 implementan la opción 7 del menú para generar diversos reportes.
+#  18. Las líneas 402-465 implementan la opción 8 del menú para gestionar las matrículas de los campers aprobados.
+#  19. Las Líneas 467-497 implementan la opción 9 del menú para seleccionar el horario de los traines.
+#  20. La línea 499 imprime un mensaje de despedida.
+#  22. Las líneas 505-516 contienen comentarios sobre las fechas de subida del código.
+
+#  Este código utiliza estructuras de datos como diccionarios y listas para almacenar y manipular la información de los campers, trainers, coordinadores, rutas, áreas y matrículas. 
+#  También utiliza funciones para separar las diferentes funcionalidades del programa y facilitar su mantenimiento y escalabilidad.
