@@ -98,7 +98,7 @@ while True:
         }
         data = cargar() # Carga los datos existentes
         data["campers"].append(camper) # Agrega el nuevo camper a la lista de campers
-         guardar(data) # Guarda los datos actualizados
+        guardar(data) # Guarda los datos actualizados
         print(Fore.GREEN + "Camper creado exitosamente." + Style.RESET_ALL)
         input("Presiona Enter para continuar...")
 
@@ -198,3 +198,103 @@ while True:
             input("Presiona Enter para continuar...")
 
     elif opcion == 6: # Si la opción es 6, asignar campers y trainers a rutas de entrenamiento
+        data=cargar() # Carga los datos existentes
+        campers=[c for c in data["campers"] if c["estado"] == "aprobado"] # Filtra los campers aprobados
+        rutas=data["rutas"]
+        areas=data["areas"]
+        trainers=data["trainers"]
+
+        for camper in campers: # Itera sobre los campers aprobados
+            print(Fore.GREEN + f"Asignando ruta para el camper {camper['nombres']} {camper['apellidos']}" + Style.RESET_ALL)
+            print("")
+            for i, ruta in enumerate(rutas): # Muestra las rutas disponibles
+                print(Fore.CYAN + f"{i+1}. {ruta['nombre']}" + Style.RESET_ALL)
+
+            print("")
+            opcion_ruta=enteros("Seleccione una ruta: ") # Solicita al usuario que seleccione una ruta
+            ruta_seleccionada=rutas[opcion_ruta-1] # Obtiene la ruta seleccionada
+
+            area_disponible=None
+            for area in areas: # Itera sobre las áreas
+                if area["ruta"] is None or (area["ruta"] == ruta_seleccionada["nombre"] and len(area["campers"]) < area["capacidad_maxima"]):
+                    area_disponible = area # Encuentra un área disponible para la ruta seleccionada
+                    break
+
+            if area_disponible:
+                area_disponible["ruta"]=ruta_seleccionada["nombre"]
+                camper["ruta_asignada"]=ruta_seleccionada["nombre"]
+                area_disponible["campers"].append(camper)  # Agrega el camper al área disponible
+                print("---------------------------------------------------------------------------------")
+                print(Fore.GREEN + f"El camper {camper['nombres']} {camper['apellidos']} ha sido asignado a la ruta {ruta_seleccionada['nombre']} en el area {area_disponible['nombre']}." + Style.RESET_ALL)
+
+                trainer_disponible=None
+                for trainer in trainers: # Itera sobre los trainers
+                    if ruta_seleccionada["nombre"] not in trainer["rutas_asignadas"]:
+                        trainer_disponible=trainer # Encuentra un trainer disponible para la ruta seleccionada
+                        trainer["rutas_asignadas"].append(ruta_seleccionada["nombre"])
+                        break
+
+                if trainer_disponible:
+                    print(Fore.GREEN + f"El trainer {trainer_disponible['nombres']} {trainer_disponible['apellidos']} ha sido asignado a la ruta {ruta_seleccionada['nombre']}." + Style.RESET_ALL)
+                    print("---------------------------------------------------------------------------------")
+                else:
+                    print(Fore.RED + f"No hay trainers disponibles para asignar a la ruta {ruta_seleccionada['nombre']}." + Style.RESET_ALL)
+            else: 
+                print(Fore.RED + f"No hay areas disponibles para la ruta {ruta_seleccionada['nombre']}. El camper {camper['nombres']} {camper['apellidos']} no puede ser asignado." + Style.RESET_ALL)
+
+        guardar(data) # Guarda los datos actualizados
+        input("Presiona Enter para Continuar...")
+
+    elif opcion == 7: # Si la opción es 7, generar reportes
+        data=cargar() # Carga los datos existentes
+        campers=data["campers"]
+        trainers=data["trainers"]
+        rutas=data["rutas"]
+
+        print(Fore.YELLOW + "==== Modulo de Reportes ====" + Style.RESET_ALL)
+        print("")
+        print(Fore.CYAN + "1. Evaluar campers" + Style.RESET_ALL)
+        print(Fore.CYAN + "2. Listar campers inscritos" + Style.RESET_ALL)
+        print(Fore.CYAN + "3. listar campers aprobados" + Style.RESET_ALL)
+        print(Fore.CYAN + "4. Listar trainers" + Style.RESET_ALL)
+        print(Fore.CYAN + "5. Listar campers con bajo rendimiento" + Style.RESET_ALL)
+        print(Fore.CYAN + "6. listar camper y trainers por ruta" + Style.RESET_ALL)
+        print(Fore.CYAN + "7. mostrar estadisticas de modulos" + Style.RESET_ALL)
+        print("")
+        
+        opcion_reporte=enteros("Eliga una opcion: ") # Solicita al usuario que seleccione una opción de reporte
+        print("")
+
+        if opcion_reporte == 1:  # Si la opción es 1, evaluar campers
+            for ruta in rutas: # Itera sobre las rutas
+                print(Fore.GREEN + f"Ruta: {ruta['nombre'].upper()}" + Style.RESET_ALL)
+                for modulo in ruta["modulos"]: # Itera sobre los módulos de la ruta
+                    print("")
+                    print(Fore.YELLOW + f"Evaluando modulo {modulo['nombre']}" + Style.RESET_ALL)
+                    print("====================================================")
+                    for camper in campers: # Itera sobre los campers
+                        if"ruta_asignada" in camper and camper["ruta_asignada"] == ruta["nombre"]:
+                            nota_teorica=decimal(f"Ingrese la nota teorica del camper {camper['nombres']} {camper['apellidos']} para el modulo {modulo['nombre']}: ")
+                            print("-------------------------------------------------------------------------------------------")
+                            nota_practica=decimal(f"Ingrese la nota practica del camper {camper['nombres']} {camper['apellidos']} para el modulo {modulo['nombre']}: ")
+                            print("-------------------------------------------------------------------------------------------")
+                            promedio_pruebas=(nota_teorica * 0.3) + (nota_practica * 0.6) # Calcula el promedio de las pruebas
+                            if promedio_pruebas >= 0.6:
+                                estado_pruebas="aprobado"
+                            else:
+                                estado_pruebas="reprobado"
+                            
+                            quizes_trabajos = []
+                            num_quizes_trabajos = enteros(f"Ingrese el numero de quices y trabajos del camper {camper['nombres']} {camper['apellidos']} para el modulo {modulo['nombre']}: ")
+                            for i in range(num_quizes_trabajos): # Itera para ingresar las notas de los quices y trabajos
+                                print("-------------------------------------------------------------------------------------------")
+                                nota_quiz_trabajo = decimal(f"Ingrese la nota del quiz/trabajo {i+1}: ")
+                                print("")
+                                quizes_trabajos.append(nota_quiz_trabajo)
+                            promedio_quizes_trabajos = sum(quizes_trabajos) / num_quizes_trabajos # Calcula el promedio de los quices y trabajos
+
+                            nota_final = (promedio_pruebas * 0.9) + (promedio_quizes_trabajos * 0.1) # Calcula la nota final del módulo
+                            if nota_final >= 0.6:
+                                estado_final="aprobado"
+                            else:
+                                estado_final="reprobado"
