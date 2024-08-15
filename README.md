@@ -49,6 +49,6 @@ Este proyecto es un sistema de gestión académica desarrollado para CampusLands
 
 ## 👥 Autores
 
-- Jaime Enrique Barrera Sandoval
-- Jhonatan Eduardo Omaña Garcia
+- Jaime Enrique Barrera Sandoval.
+- Jhonatan Eduardo Omaña Garcia.
 
