@@ -398,3 +398,93 @@ while True:
         else: # Si la opción de reporte es inválida
             print(Fore.RED + "Opcion invalida" + Style.RESET_ALL)
             input("Presiona Enter para continuar...")   
+
+             elif opcion == 8: # Si la opción es 8, gestionar matrículas 
+        data = cargar() # Carga los datos existentes
+        campers = [c for c in data["campers"] if c["estado"] == "aprobado"] # Filtra los campers aprobados
+        rutas = data["rutas"]
+        trainers = data["trainers"]
+        areas = data["areas"]
+        matriculas = data["matriculas"]
+
+        if not campers: # Si no hay campers aprobados
+            print(Fore.RED + "No hay campers aprobados para matricular." + Style.RESET_ALL)
+        else:
+            for camper in campers: # Itera sobre los campers aprobados
+                print(Fore.YELLOW + f"Matriculando el camper {camper['nombres']} {camper['apellidos']}" + Style.RESET_ALL)
+                print("------------------------------------------")
+                for i, ruta in enumerate(rutas): # Muestra las rutas disponibles
+                    print(Fore.CYAN + f"{i+1}. {ruta['nombre']}" + Style.RESET_ALL)
+                print("------------------------------------------")
+                opcion_ruta = enteros("Seleccione una ruta: ") # Solicita al usuario que seleccione una ruta
+                print("------------------------------------------")
+                ruta_seleccionada = rutas[opcion_ruta - 1] # Obtiene la ruta seleccionada
+
+                trainer_disponible = None 
+                for trainer in trainers: # Itera sobre los trainers
+                    if ruta_seleccionada["nombre"] not in trainer["rutas_asignadas"]:
+                        trainer_disponible = trainer # Encuentra un trainer disponible para la ruta seleccionada
+                        trainer["rutas_asignadas"].append(ruta_seleccionada["nombre"])  # Asigna la ruta al trainer
+                        break
+
+                if not trainer_disponible: # Si no hay trainers disponibles para la ruta
+                    print(Fore.RED + f"No hay trainers disponibles para la ruta {ruta_seleccionada['nombre']}." + Style.RESET_ALL)
+                    continue # Continúa con el siguiente camper
+
+                area_disponible = None
+                for area in areas: # Itera sobre las áreas
+                    if area["ruta"] == ruta_seleccionada["nombre"] and len(area["campers"]) < area["capacidad_maxima"]:
+                        area_disponible = area # Encuentra un área disponible para la ruta seleccionada
+                        break
+
+                if not area_disponible:
+                    print(Fore.RED + f"No hay areas disponibles para la ruta {ruta_seleccionada['nombre']}." + Style.RESET_ALL)
+                    continue # Continúa con el siguiente camper
+
+                fecha_inicio = input("Ingrese la fecha de inicio de la matricula (dd/mm/aaaa): ") # Solicita la fecha de inicio de la matrícula
+                fecha_fin = input("Ingrese la fecha de finalizacion de la matricula (dd/mm/aaaa): ") # Solicita la fecha de finalización de la matrícula
+                salon = input("Ingrese el salon de entrenamiento: ")
+                print("-----------------------------------------------------------")
+
+                matricula = { # Crea un diccionario con los detalles de la matrícula
+                    "camper": camper,
+                    "ruta": ruta_seleccionada["nombre"],
+                    "trainer": trainer_disponible,
+                    "area": area_disponible["nombre"],
+                    "fecha_inicio": fecha_inicio,
+                    "fecha_fin": fecha_fin,
+                    "salon": salon
+                }
+
+                matriculas.append(matricula) # Agrega la matrícula a la lista de matrículas
+                area_disponible["campers"].append(camper) # Agrega el camper al área disponible
+
+                print(Fore.GREEN + f"Matricula registrada exitosamente para el camper {camper['nombres']} {camper['apellidos']}." + Style.RESET_ALL)  # Muestra un mensaje de confirmación
+
+        guardar(data) # Guarda los datos actualizados
+        input("Presione Enter para continuar...")
+
+    elif opcion == 9:  # Si la opción es 9, Selecciona los horarios de los Trainers 
+        print(Fore.YELLOW + "=== Seleccionar horario de trainers ===" + Style.RESET_ALL)
+        data = cargar() # Carga los datos existentes
+        trainers = data["trainers"] 
+        horarios_disponibles = ["8:00 am - 12:00 pm", "1:00 pm - 5:00 pm", "6:00 pm - 10:00 pm"] # Define una lista de horarios disponibles para asignar a los trainers
+
+        for i, trainer in enumerate(trainers): # Itera sobre la lista de trainers
+            print(Fore.CYAN + f"{i+1}. {trainer['nombres']} {trainer['apellidos']}" + Style.RESET_ALL)
+
+        print("")
+        opcion_trainer = enteros("Seleccione el número del trainer para asignar el horario: ") # Solicita al usuario que ingrese el número del trainer al que desea asignar un horario
+
+        if 1 <= opcion_trainer <= len(trainers): # Si la opción del trainer seleccionada es válida (dentro del rango de la lista de trainers)
+            trainer_seleccionado = trainers[opcion_trainer - 1] # Obtiene el diccionario del trainer seleccionado desde la lista de trainers
+            print(Fore.YELLOW + "Horarios disponibles:" + Style.RESET_ALL)
+            for i, horario in enumerate(horarios_disponibles): # Itera sobre la lista de horarios disponibles
+                print(Fore.CYAN + f"{i+1}. {horario}" + Style.RESET_ALL)
+
+            opcion_horario = enteros("Seleccione el número del horario: ") # Solicita al usuario que ingrese el número del horario que desea asignar
+
+            if 1 <= opcion_horario <= len(horarios_disponibles): # Si la opción del horario seleccionado es válida (dentro del rango de la lista de horarios disponibles)
+                horario_seleccionado = horarios_disponibles[opcion_horario - 1] # Obtiene el horario seleccionado desde la lista de horarios disponibles
+                trainer_seleccionado["horarios"] = [horario_seleccionado] # Asigna el horario seleccionado al trainer seleccionado en la clave "horarios"
+                guardar(data) # Guarda los datos actualizados
