@@ -298,3 +298,103 @@ while True:
                                 estado_final="aprobado"
                             else:
                                 estado_final="reprobado"
+                             
+                            camper[modulo['nombre']]={ # Asigna las notas y estados del módulo al camper
+                                "nota_teorica": nota_teorica,
+                                "nota_practica": nota_practica,
+                                "promedio_pruebas": promedio_pruebas,
+                                "estado_pruebas": estado_pruebas,
+                                "quizes_trabajos": quizes_trabajos,
+                                "promedio_quizes_trabajos": promedio_quizes_trabajos,
+                                "nota_final": nota_final,
+                                "estado_final": estado_final
+                            }
+            guardar(data) # Guarda los datos actualizados
+            print(Fore.GREEN + "Evaluacion de campers completada." + Style.RESET_ALL)
+            input("Presione Enter para continuar...")
+
+        elif opcion_reporte == 2: # Si la opción es 2, listar campers inscritos
+            campers_inscritos = [c for c in campers if c["estado"] == "inscrito"] # Filtra los campers inscritos
+            if campers_inscritos:
+                print(Fore.YELLOW + "Campers inscritos:" + Style.RESET_ALL)
+                print("---------------------")
+                for c in campers_inscritos: # Muestra los campers inscritos
+                    print(Fore.CYAN + f"* {c['nombres']} {c['apellidos']}" + Style.RESET_ALL)
+            else:
+                print(Fore.RED + "No hay campers inscritos" + Style.RESET_ALL)
+            input("Presione Enter para continuar...")
+
+        elif opcion_reporte == 3: # Si la opción es 3, listar campers aprobados
+            print("")
+            campers_aprobados = [c for c in campers if c["estado"] == "aprobado"] # Filtra los campers aprobados
+            if campers_aprobados:
+                print(Fore.YELLOW + "Campers aprobados:" + Style.RESET_ALL)
+                print("---------------------")
+                for c in campers_aprobados: # Muestra los campers aprobados
+                    print(Fore.CYAN + f"* {c['nombres']} {c['apellidos']}" + Style.RESET_ALL)
+            else:
+                print(Fore.RED + "No hay campers aprobados." + Style.RESET_ALL)
+            input("Presione Enter para continuar...")
+
+        elif opcion_reporte == 4: # Si la opción es 4, listar trainers
+            if trainers:
+                print(Fore.YELLOW + "Trainers de CampusLands:" + Style.RESET_ALL)
+                print("---------------------")
+                for t in trainers: # Muestra los trainers registrados
+                    print(Fore.CYAN + f"* {t['nombres']} {t['apellidos']}" + Style.RESET_ALL)
+            else:
+                print(Fore.RED + "No hay trainers registrados." + Style.RESET_ALL)
+            input("Presione Enter para continuar...")
+
+        elif opcion_reporte == 5: # Si la opción es 5, listar campers con bajo rendimiento
+            campers_bajo_rendimiento = [c for c in campers if c.get("rendimeinto") and c["rendimiento"] <0.6] # Filtra los campers con rendimiento menor a 0.6
+            if campers_bajo_rendimiento:
+                print(Fore.YELLOW + "Campers con bajo rendimiento:" + Style.RESET_ALL)
+                print("---------------------")
+                for c in campers_bajo_rendimiento: # Muestra los campers con bajo rendimiento
+                    print(Fore.CYAN + f"* {c['nombres']} {c['apellidos']}" + Style.RESET_ALL)
+            else:
+                print(Fore.RED + "No hay campers con bajo rendimiento." + Style.RESET_ALL)
+            input("Presione Enter para continuar...")
+        
+        elif opcion_reporte == 6: # Si la opción es 6, listar campers y trainers por ruta
+            for ruta in rutas: # Itera sobre las rutas
+                campers_en_ruta = [c for c in campers if "ruta_asignada" in c and c ["ruta_asignada"] == ruta["nombre"]] # Filtra los campers asignados a la ruta actual
+                trainers_en_ruta = [t for t in trainers if ruta["nombre"] in t["rutas_asignadas"]]  # Filtra los trainers asignados a la ruta actual
+                print(Fore.GREEN + f"Ruta: {ruta['nombre'].upper()}" + Style.RESET_ALL)
+                print("============")
+                if campers_en_ruta: # Si hay campers en la ruta actual
+                    print(Fore.YELLOW + "Campers en esta ruta:" + Style.RESET_ALL)
+                    print("----------------------")
+                    for c in campers_en_ruta: # Muestra los campers en la ruta actual
+                        print(Fore.CYAN + f"* {c['nombres']} {c['apellidos']}" + Style.RESET_ALL)
+                else:
+                    print(Fore.RED + "No hay campers en esta ruta." + Style.RESET_ALL)
+                if trainers_en_ruta: # Si hay trainers en la ruta actual 
+                    print(Fore.YELLOW + "trainers asignados a esta ruta:" + Style.RESET_ALL)
+                    print("----------------------")
+                    for t in trainers_en_ruta: # Muestra los trainers en la ruta actual 
+                        print(Fore.CYAN + f"* {t['nombres']} {t['apellidos']}" + Style.RESET_ALL)
+                else:
+                    print(Fore.RED + "No hay trainers asignados a esta ruta." + Style.RESET_ALL)
+                print()
+            input("Presione Enter para continuar...")
+
+        elif opcion_reporte == 7: # Si la opción es 7, mostrar estadísticas de módulos
+            for ruta in rutas: # Itera sobre las rutas
+                print(Fore.GREEN + f"Ruta: {ruta['nombre'].upper()}" + Style.RESET_ALL)
+                print("=================")
+                for modulo in ruta["modulos"]: # Itera sobre los módulos de la ruta
+                    campers_aprobados=[c for c in campers if modulo["nombre"] in c and c [modulo["nombre"]]["estado_final"] == "aprobado"]  # Filtra los campers aprobados en el módulo
+                    campers_reprobados=[c for c in campers if modulo["nombre"] in c and c [modulo["nombre"]]["estado_final"] == "reprobado"] # Filtra los campers reprobados en el módulo
+                    print(Fore.YELLOW + f"Modúlo: {modulo['nombre']}" + Style.RESET_ALL)
+                    print("------------------------------------------")
+                    print(Fore.CYAN + f"Campers aprobados: {len(campers_aprobados)}" + Style.RESET_ALL) # Muestra la cantidad de campers aprobados en el módulo
+                    print(Fore.CYAN + f"Campers reprobados: {len(campers_reprobados)}" + Style.RESET_ALL) # Muestra la cantidad de campers reprobados en el módulo
+                    print("------------------------------------------")
+                print()
+            input("Presiona Enter para continuar...")
+
+        else: # Si la opción de reporte es inválida
+            print(Fore.RED + "Opcion invalida" + Style.RESET_ALL)
+            input("Presiona Enter para continuar...")   
