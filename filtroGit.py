@@ -1,6 +1,8 @@
 import os # Importa el módulo para interactuar con el sistema operativo 
 import json # Importa el módulo json para trabajar con archivos JSON
-from colorama import Fore, Style # Importa las clases Fore y Style del módulo colorama para imprimir texto en colores
+from colorama import Fore, Style # type: ignore # Importa las clases Fore y Style del módulo colorama para imprimir texto en colores
+#DESCARGAR COLORAMA ESCRIBE ESTE CODIGO EN CONSOLA (python -m pip install colorama)
+from datetime import datetime
 
 DATA_FILE="campus_lands.json" # Ruta del archivo JSON donde se almacenarán los datos
 
@@ -89,6 +91,7 @@ while True:
             "# de Identificacion" : enteros("Ingrese el numero de CC o TI del camper: "),  
             "nombres" : input("Ingrese el nombre del camper: "),
             "apellidos" : input("Ingrese el apellido del camper: "),
+            "fecha_y_hora_ingreso": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "direccion" : input("Ingrese la dirección del camper: "),
             "acudiente" : input("Ingrese nombre del acudiente del camper: "),
             "Fijo" : enteros("Ingrese el numero de fijo del camper: "),

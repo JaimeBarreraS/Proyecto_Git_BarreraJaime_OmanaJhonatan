@@ -171,6 +171,19 @@
             "riesgo": "bajo",
             "nota_final": 3.5999999999999996,
             "ruta_asignada": "nodejs"
+        },
+        {
+            "# de Identificacion": 1,
+            "nombres": "dgdg",
+            "apellidos": "dgdg",
+            "hora_ingreso": "12",
+            "fecha_ingreso": "2024-08-15 11:57:39",
+            "direccion": "",
+            "acudiente": "dgdg",
+            "Fijo": 145,
+            "Telefono": 4569,
+            "estado": "ingreso",
+            "riesgo": "bajo"
         }
     ],
     "trainers": [
